@@ -1,0 +1,93 @@
+name: stand_robotis
+recorded_at: '2026-11-15T01:53:57'
+joints:
+  1:
+    name: r_shoulder_pitch
+    model: AX-12A
+    position: 334
+    deg: -52.15
+  2:
+    name: l_shoulder_pitch
+    model: AX-12A
+    position: 688
+    deg: 51.56
+  3:
+    name: r_shoulder_roll
+    model: AX-12A
+    position: 297
+    deg: -62.99
+  4:
+    name: l_shoulder_roll
+    model: AX-12A
+    position: 724
+    deg: 62.11
+  5:
+    name: r_elbow
+    model: AX-12A
+    position: 411
+    deg: -29.59
+  6:
+    name: l_elbow
+    model: AX-12A
+    position: 612
+    deg: 29.3
+  7:
+    name: r_hip_yaw
+    model: AX-12A
+    position: 356
+    deg: -45.7
+  8:
+    name: l_hip_yaw
+    model: AX-12A
+    position: 666
+    deg: 45.12
+  9:
+    name: r_hip_roll
+    model: AX-12A
+    position: 491
+    deg: -6.15
+  10:
+    name: l_hip_roll
+    model: AX-12A
+    position: 532
+    deg: 5.86
+  11:
+    name: r_hip_pitch
+    model: AX-12A
+    position: 394
+    deg: -34.57
+  12:
+    name: l_hip_pitch
+    model: AX-12A
+    position: 628
+    deg: 33.98
+  13:
+    name: r_knee
+    model: AX-12A
+    position: 277
+    deg: -68.85
+  14:
+    name: l_knee
+    model: AX-12A
+    position: 745
+    deg: 68.26
+  15:
+    name: r_ankle_pitch
+    model: AX-12A
+    position: 638
+    deg: 36.91
+  16:
+    name: l_ankle_pitch
+    model: AX-12A
+    position: 383
+    deg: -37.79
+  17:
+    name: r_ankle_roll
+    model: AX-12A
+    position: 491
+    deg: -6.15
+  18:
+    name: l_ankle_roll
+    model: AX-12A
+    position: 532
+    deg: 5.86

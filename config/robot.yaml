@@ -1,0 +1,47 @@
+# ROBOTIS Premium Humanoid Type A + AX-18A grippers
+#
+# ID map follows the standard BIOLOID humanoid layout (odd = right, even = left).
+# It is consistent with the e-Manual gyro example (13-16 pitch balance, 9-10/17-18 roll balance),
+# but has NOT been verified on this robot yet: run `python -m tools.scan --blink <id>` to confirm.
+
+bus:
+  protocol: 1.0
+  baudrate: 1000000
+
+joints:
+  1:  {name: r_shoulder_pitch, model: AX-12A}
+  2:  {name: l_shoulder_pitch, model: AX-12A}
+  3:  {name: r_shoulder_roll,  model: AX-12A}
+  4:  {name: l_shoulder_roll,  model: AX-12A}
+  5:  {name: r_elbow,          model: AX-12A}
+  6:  {name: l_elbow,          model: AX-12A}
+  7:  {name: r_hip_yaw,        model: AX-12A}
+  8:  {name: l_hip_yaw,        model: AX-12A}
+  9:  {name: r_hip_roll,       model: AX-12A}
+  10: {name: l_hip_roll,       model: AX-12A}
+  11: {name: r_hip_pitch,      model: AX-12A}
+  12: {name: l_hip_pitch,      model: AX-12A}
+  13: {name: r_knee,           model: AX-12A}
+  14: {name: l_knee,           model: AX-12A}
+  15: {name: r_ankle_pitch,    model: AX-12A}
+  16: {name: l_ankle_pitch,    model: AX-12A}
+  17: {name: r_ankle_roll,     model: AX-12A}
+  18: {name: l_ankle_roll,     model: AX-12A}
+  # Left gripper: was ID 1 (duplicate of r_shoulder_pitch), changed to 20 on 2026-11-15.
+  # Travel ~160 deg. Horn re-mounted 180 deg so the travel avoids the potentiometer dead zone;
+  # Joint mode. Measured stops: closed 372, open 920 (160 deg). Angle limits set to 378-914.
+  20: {name: l_gripper,        model: AX-18A}
+  # Right gripper: was also ID 1, changed to 19 on 2026-11-15. Horn re-mounted 180 deg, joint mode.
+  # Measured stops: open 410, closed 955 (160 deg). Angle limits set to 416-949.
+  # Note the mirrored direction: left closes toward low ticks, right closes toward high ticks.
+  19: {name: r_gripper,        model: AX-18A}
+
+test:
+  amplitude_deg: 10        # motor_test: move +/- this much around the current position
+  torque_limit_pct: 40     # motor_test: torque limit during the motion test
+  speed_rpm: 12            # motor_test: moving speed
+  max_error_deg: 3.0       # tracking error above this -> WARN, above 2x -> FAIL
+  max_jitter_ticks: 3      # position noise while holding (worn potentiometer check)
+  max_temp_c: 60
+  min_voltage_v: 10.0
+  step_timeout_s: 3.0
