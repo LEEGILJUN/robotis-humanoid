@@ -21,6 +21,16 @@ class CommError(RuntimeError):
 
 
 def find_ports() -> list[str]:
+    """FTDI serial ports (USB2Dynamixel, U2D2, and also the CM-530 PC LINK) on any OS."""
+    try:
+        from serial.tools import list_ports
+
+        ftdi = sorted(p.device for p in list_ports.comports() if p.vid == 0x0403)
+        ftdi = [p for p in ftdi if not p.startswith("/dev/tty.")]  # macOS: prefer cu.*
+        if ftdi:
+            return ftdi
+    except Exception:
+        pass
     patterns = ["/dev/cu.usbserial-*", "/dev/cu.usbmodem*", "/dev/ttyUSB*", "/dev/ttyACM*"]
     ports: list[str] = []
     for pattern in patterns:

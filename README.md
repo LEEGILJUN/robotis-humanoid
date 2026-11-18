@@ -25,6 +25,29 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
+## Windows 설치 (개발 환경 이전용)
+
+1. Python 3.12, Git, Claude 데스크톱 앱을 설치합니다.
+2. 저장소를 받고 가상환경을 만듭니다.
+
+   ```powershell
+   git clone https://github.com/LEEGILJUN/robotis-humanoid.git
+   cd robotis-humanoid
+   py -3.12 -m venv .venv
+   .venv\Scripts\pip install -r requirements.txt
+   .venv\Scripts\python -m pytest -q
+   ```
+
+3. 명령은 `.venv/bin/python` 대신 `.venv\Scripts\python` 으로 실행합니다.
+4. **USB 지연 줄이기 (중요):** 장치 관리자 → 포트(COM & LPT) → USB2Dynamixel의 COM 포트 → 속성 → 포트 설정 → 고급 →
+   **대기 시간 타이머(Latency Timer)를 16 → 1ms**로 바꿉니다. 모터 읽기가 크게 빨라집니다.
+5. FTDI 장치가 여러 개면(USB2Dynamixel과 CM-530 미니 USB) 도구가 포트를 고르라고 하니 `--port COM5`처럼 지정합니다.
+   어느 COM이 USB2Dynamixel인지는 `python -m tools.scan --port COMx` 로 모터가 응답하는 쪽입니다.
+6. **CM-530 태스크·모션 내려받기:** ROBOTIS 자료실에서 Windows용 R+ Task 2.0 / R+ Motion 2.0을 설치하고,
+   미니 USB 케이블로 CM-530의 PC LINK 포트에 연결해서 내려받습니다. 제어기는 **CM-530**으로 맞춥니다.
+7. **BT-210:** Windows 블루투스 설정에서 짝을 맺으면(PIN 0000) COM 포트가 생깁니다.
+   `tools/bt_remote.py`, `tools/bt_session.py`, `tools/ble_*.py`는 macOS 전용이라 Windows에서는 COM 포트 방식으로 다시 만들어야 합니다.
+
 ## 점검 순서
 
 로봇을 바닥에 눕히거나 거치대에 매단 상태에서 진행합니다.
@@ -68,6 +91,12 @@ python3 -m venv .venv
   - `set_id`: 모터 ID 변경 (새 ID가 비어 있는지, 모델이 맞는지 확인한 뒤 변경)
   - `gripper_test`: Wheel 모드 그리퍼의 열림·닫힘 끝 찾기 (출력 비율로 구동, 멈춤 감지)
   - `horn_move`: 분리한 혼을 절대 위치로 이동 (약한 탐색 이동 후 본 이동, 걸림 시 즉시 정지)
+  - `patch_task`: 순정 Type A 태스크에 그리퍼 버튼(1+2 열기, 3+4 닫기, 5/6) 추가 → `stock/humanoidtypea_gripper.tsk`
+  - `rc100`: RC-100 버튼 코드와 패킷 (전송은 하지 않음)
+  - `bt_remote`, `bt_session` (macOS 전용): BT-210으로 리모컨 신호 전송. 세션은 연결을 유지하고 `logs/bt_cmd`로 명령을 받음
+  - `ble_probe`, `ble_survey`, `ble_info` (macOS 전용): 저전력 블루투스 장치 검색
+- `stock/`: ROBOTIS 순정 태스크·모션 파일과 수정본 (비공개 저장소에만 보관)
+- `docs/STRATEGY.md`: 보유 장비 기반 단계별 개발 전략
 
 ## 현재 하드웨어 상태 (2026-11-15)
 
@@ -76,6 +105,15 @@ python3 -m venv .venv
 - 그리퍼는 위치 센서 사각 구간을 피하도록 혼을 180° 돌려 다시 조립했고, 관절 모드로 바꿨습니다.
 - PC 연결은 CM-530을 MANAGE 모드로 켜 두고 남는 DXL 포트에 USB2Dynamixel을 꽂는 방식을 씁니다.
 - macOS에서는 USB 지연 때문에 20개 모터를 한 바퀴 읽는 데 약 0.3초가 걸립니다.
+
+## 진행 상황 (2026-11-18)
+
+- CM-530 WIRELESS 포트에는 적외선 수신기 대신 **BT-210**이 꽂혀 있습니다. Mac과 짝을 맺었고 리모컨 신호 전달을 확인했습니다.
+- macOS의 `/dev/cu.ROBOTISBT-210` 포트로는 보내지 않습니다. 연결 없이 신호가 쌓였다가 다음 연결 때 한꺼번에 전달되어 로봇이 예고 없이 걸었습니다.
+- **그리퍼 수정 태스크는 아직 CM-530에 들어가지 않았습니다.** Mac용 R+ m.Task2(아이패드 앱)는 BT-410만 지원하고 USB·BT-210은 지원하지 않습니다.
+  컴파일은 성공했으니 Windows용 R+ Task 2.0으로 미니 USB 케이블을 써서 내려받으면 됩니다.
+- 내려받은 뒤 확인 방법: CM-530 PLAY → START → R 후 그리퍼(19, 20) Torque Limit을 읽어서 **512**면 수정 태스크, 1023이면 순정입니다.
+- 다음 계획: Windows로 개발 환경 이전 → 그리퍼 태스크 내려받기 → CM-530이 자이로·거리 센서 값을 BT로 보내도록 태스크 확장 검토 → `docs/STRATEGY.md` 0~2단계.
 
 ## 주의 사항
 
